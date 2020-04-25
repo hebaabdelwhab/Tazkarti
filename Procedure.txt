@@ -1,0 +1,77 @@
+create or replace
+procedure delete_ticket( Tid in NUMBER)
+as
+begin 
+delete tickets where ticketid = tid;
+end; 
+create or replace PROCEDURE getDeparture
+(dep out sys_refcursor)
+as
+begin
+open dep for
+select DISTINCT departure from flights where flight_date > sysdate and availableseats > 0;
+end;
+create or replace PROCEDURE getDestination
+(dest out sys_refcursor)
+as
+begin
+open dest for
+select  distinct destination from flights where flight_date > sysdate and availableseats > 0;
+end;
+create or replace PROCEDURE GetIDTicket(Tick out number)
+as 
+begin
+SELECT max(TICKETID) 
+into Tick
+from tickets ;
+end;
+create or replace procedure 
+increment_Flight_seats (fID in Number) 
+as
+begin
+update flights set availableseats = availableseats+1 where flightid = fid;
+end;
+create or replace procedure Insert_Flight
+(PFlightId number, PTotalSeats Number,PAvailableSeats Number,PArrivalTime  Date, PDepartureTime  Date, PDestination  varchar2,
+PDeparture varchar2,Pprice number , PcompanyName varchar2,PAirPlaneId number , PFlightDate date)
+as
+begin
+INSERT  into flights(FLIGHTID,TOTALSEATS,AVAILABLESEATS,ARRIVALTIME,DEPARTURETIME,DESTINATION,
+DEPARTURE,PRICE , COMPANY_NAME,AIRPLANE_ID,FLIGHT_DATE) Values ( PFlightId, PTotalSeats, PAvailableSeats
+, PArrivalTime , PDepartureTime, PDestination,PDeparture,Pprice,PcompanyName,PAirPlaneId,PFlightDate);
+End ;
+create or replace procedure Insert_Ticket
+(PtickId number, PStatus Number,Ptype Number,PflightId  number ,PpassengerUser VARCHAR,BDate date)
+as
+begin
+
+INSERT  into  tickets(
+TICKETID,
+STATUS,
+ticket_TYPE,FLIGHT_ID,PUSERNAME, booking_date) 
+Values ( PtickId, PStatus, 
+Ptype, PflightId, PpassengerUser,BDate);
+End ;
+create or replace procedure Insert_Ticket
+(PtickId number, PStatus Number,Ptype Number,PflightId  number ,PpassengerUser VARCHAR,BDate date)
+as
+begin
+
+INSERT  into  tickets(
+TICKETID,
+STATUS,
+ticket_TYPE,FLIGHT_ID,PUSERNAME, booking_date) 
+Values ( PtickId, PStatus, 
+Ptype, PflightId, PpassengerUser,BDate);
+End ;
+create or replace procedure update_Flight_seats (fID in Number) as
+begin
+update flights set availableseats = availableseats-1 where flightid = fid;
+end;
+create or replace procedure update_Ticket_Data(TticketId number,Ttype number , TflightId number, TPUsername varchar)
+as
+begin
+update    tickets 
+set TICKET_TYPE =Ttype,FLIGHT_ID=TflightId, PUSERNAME=TPUsername
+where   TICKETID = TticketId;
+end;
